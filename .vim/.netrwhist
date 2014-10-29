@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/etc/X11/xorg.conf.d'
+let g:netrw_dirhist_2='/usr/share/X11/app-defaults'
+let g:netrw_dirhist_3='/home/rcmerci/.local'
+let g:netrw_dirhist_4='/home/rcmerci/.cache'
+let g:netrw_dirhist_5='/home/rcmerci/.cache/openbox'
+let g:netrw_dirhist_6='/home/rcmerci/.vim'
+let g:netrw_dirhist_7='/home/rcmerci/.vim/syntax'
+let g:netrw_dirhist_8='/home/rcmerci/.vim'
+let g:netrw_dirhist_9='/home/rcmerci/codecraft'
