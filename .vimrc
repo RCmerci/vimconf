@@ -85,7 +85,6 @@ function! s:ParFuncL(type)
 endfunction
 function! s:ParFuncR(type)
     let n = getline('.')[col('.')]
-    echom n
     echom "col" . col('.')+1
     let input = ""
     if a:type ==# 0 
@@ -105,7 +104,7 @@ function! s:ParFuncR(type)
 endfunction
 "----------------------------------------------
 inoremap " <esc>:call <SID>Quotefunc(0)<cr>a
-inoremap ' ''<LEFT>
+inoremap ' <esc>:call <SID>Quotefunc(1)<cr>a
 function! s:Quotefunc(type)
     let curr = getline('.')[col(".")-1]
     if a:type ==# 0
@@ -116,8 +115,85 @@ function! s:Quotefunc(type)
     if curr ==# c
         exe "normal! \<RIGHT>"
     else
+        if col(".") ==# 1
+            exe "normal! i" . c . c . "\<LEFT>"
+            return
+        endif
         exe "normal! a" . c . c . "\<LEFT>"
     endif
+endfunction
+"-------------括号引号的移动-------------------------------"
+inoremap <c-l> <esc>:call <SID>ParMoveR()<cr>
+inoremap <c-j> <esc>:call <SID>ParMoveL()<cr>
+function! s:ParMoveR() "这里用mark，还不知道怎么获得之前的mark位置,所以会破坏之前设置的mark
+    exe "normal! mz"     
+    if <SID>GetNextPar([getcurpos()[1], getcurpos()[2]+1]) == 0
+        exe "normal! `z"
+        call feedkeys("a", 'n')
+        return -1
+    endif
+    let go = input("set')'after:", '')
+    exe "normal! x"
+    if go !=# '' && search(go, 'We')
+        exe "normal! a)\<esc>`z"
+        call feedkeys("a", "n")
+        return 0
+    endif
+    exe "normal! i)\<ESC>`z"
+    call feedkeys("a", "n")
+    return -1
+endfunction
+function! s:ParMoveL()
+    exe "normal! mz"
+    if <SID>GetNextPar([getcurpos()[1], getcurpos()[2]+1]) == 0
+        exe "normal! `z"
+        call feedkeys("a", 'n')
+        return -1
+    endif
+    let go = input("set')'before:", '')
+    exe "normal! x"
+    if go !=# '' && search(go, 'Wb')
+        exe "normal! \<LEFT>a)\<esc>`z"
+        call feedkeys("a", "n")
+        return 0
+    endif
+    exe "normal! i)\<ESC>`z"
+    call feedkeys("a", "n")
+    return -1
+endfunction
+function! s:GetNextPar(currentpos)
+    while 1
+        if search('\v\)', 'W')
+            let curr = getcurpos()
+            let curr = [curr[1], curr[2]]
+            exe "normal! %"
+            let pair = getcurpos()
+            let pair = [pair[1], pair[2]]
+            if <SID>CursorCompare(a:currentpos, pair) >= 0
+                call cursor(curr)
+                return 1
+            endif
+            exe "normal! %"
+        else
+            call cursor(a:currentpos)
+            return 0
+        endif
+    endwhile
+endfunction
+function! s:CursorCompare(a, b) " a = b = [line, col]
+    if a:a[0] > a:b[0]
+        return 1    "a>b
+    endif
+    if a:a[0] < a:b[0]
+        return -1   "a<b
+    endif
+    if a:a[1] > a:b[1]
+        return 1    
+    endif
+    if a:a[1] < a:b[1]
+        return -1
+    endif
+    return 0        "a=b
 endfunction
 "-------------------------------------------}}}
 "-----test code
