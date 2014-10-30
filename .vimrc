@@ -104,7 +104,20 @@ function! s:ParFuncR(type)
     endif
 endfunction
 "----------------------------------------------
-inoremap " ""<LEFT>
+inoremap " <esc>:call <SID>Quotefunc(0)<cr>a
 inoremap ' ''<LEFT>
+function! s:Quotefunc(type)
+    let curr = getline('.')[col(".")-1]
+    if a:type ==# 0
+        let c = "\""
+    elseif a:type ==# 1
+        let c = "'"
+    endif
+    if curr ==# c
+        exe "normal! \<RIGHT>"
+    else
+        exe "normal! a" . c . c . "\<LEFT>"
+    endif
+endfunction
 "-------------------------------------------}}}
 "-----test code
