@@ -79,8 +79,10 @@ function! s:ParFuncL(type)
         let input = "<"
         let r = ">"
     endif
-    if c !=# input
+    if c !=# input && col('.') != 1
         exe "normal! a". input . r ."\<LEFT>" 
+    elseif c !=# input && col('.') == 1
+        exe "normal! i". input . r ."\<LEFT>" 
     endif
 endfunction
 function! s:ParFuncR(type)
@@ -122,7 +124,7 @@ function! s:Quotefunc(type)
         exe "normal! a" . c . c . "\<LEFT>"
     endif
 endfunction
-"-------------括号引号的移动-------------------------------"
+"-------------括号的移动-------------------------------"
 inoremap <c-l> <esc>:call <SID>ParMoveR()<cr>
 inoremap <c-j> <esc>:call <SID>ParMoveL()<cr>
 function! s:ParMoveR() "这里用mark，还不知道怎么获得之前的mark位置,所以会破坏之前设置的mark
@@ -195,5 +197,18 @@ function! s:CursorCompare(a, b) " a = b = [line, col]
     endif
     return 0        "a=b
 endfunction
+"--------------------------------------------------------------"
+"inoremap <cr> <esc>:call <SID>CrFunc()<cr>
+"function! s:CrFunc()
+"    let l = getline('.')
+"    let col = col('.')
+"    if l[col-1] ==# '{' && l[col] ==# '}'
+"        exe "normal! a\<cr>\<cr>\<UP>\<ESC>>>"
+"        call feedkeys('a', 'n')
+"        return 0
+"    endif
+"    call feedkeys('<cr>', 'n')
+"    return -1
+"endfunction
 "-------------------------------------------}}}
 "-----test code
