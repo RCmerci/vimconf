@@ -8,6 +8,8 @@ set expandtab
 let g:solarized_termcolors=256
 set background=dark
 colorscheme solarized
+set cursorline
+set cursorcolumn
 "----------------把hjkl改成ijkl----------------{{{
 nnoremap i k
 nnoremap k j
@@ -212,3 +214,4 @@ endfunction
 "endfunction
 "-------------------------------------------}}}
 "-----test code
+
