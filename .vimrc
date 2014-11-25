@@ -131,7 +131,7 @@ inoremap <c-l> <esc>:call <SID>ParMoveR()<cr>
 inoremap <c-j> <esc>:call <SID>ParMoveL()<cr>
 function! s:ParMoveR() "这里用mark，还不知道怎么获得之前的mark位置,所以会破坏之前设置的mark
     exe "normal! mz"     
-    if <SID>GetNextPar([getcurpos()[1], getcurpos()[2]+1]) == 0
+    if <SID>GetNextPar([getpos(".")[1], getpos(".")[2]+1]) == 0
         exe "normal! `z"
         call feedkeys("a", 'n')
         return -1
@@ -149,7 +149,7 @@ function! s:ParMoveR() "这里用mark，还不知道怎么获得之前的mark位
 endfunction
 function! s:ParMoveL()
     exe "normal! mz"
-    if <SID>GetNextPar([getcurpos()[1], getcurpos()[2]+1]) == 0
+    if <SID>GetNextPar([getpos(".")[1], getpos(".")[2]+1]) == 0
         exe "normal! `z"
         call feedkeys("a", 'n')
         return -1
@@ -168,10 +168,10 @@ endfunction
 function! s:GetNextPar(currentpos)
     while 1
         if search('\v\)', 'W')
-            let curr = getcurpos()
+            let curr = getpos(".")
             let curr = [curr[1], curr[2]]
             exe "normal! %"
-            let pair = getcurpos()
+            let pair = getpos(".")
             let pair = [pair[1], pair[2]]
             if <SID>CursorCompare(a:currentpos, pair) >= 0
                 call cursor(curr)
